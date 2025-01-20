@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canva</title>
+  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+  <div class="loading-overlay d-none" id="loading-overlay">
+    <div class="text-center">
+        <span class="spinner mb-4"></span>
+        <p class="text-gray-600 mt-4">Processing your creative vision...</p>
+    </div>
+  </div>
+
+
+  <div class="container" style="padding: 20px;">
+    <!-- Connect Container Start -->
+    <div class="column text-center d-none" id="connect-container">
+      <button class="btn btn-light btn-connect border d-flex" onclick="connecttocanva()">
+        <img class="canva-logo" src="./assets/canva-icon.png" alt="" srcset="">
+        <span>Login with Canva</span>
+      </button>
+      <!-- <button class="btn btn-primary" onclick="fetchTemplates()">Fetch Templates</button> -->
+    </div>
+    <!-- Connect Container End -->
+
+    <!-- Image Gallery Start  -->
+    <div class="image-container col-md-12" id="image-gallery">
+      <div class="gallery-wrap">
+        <div class="item item-1" style="background-image: url('https://images.unsplash.com/photo-1499198116522-4a6235013d63?auto=format&fit=crop&w=1233&q=80');">
+            <button class="btn btn-light select-button" onclick="connecttocanva();setImageUrl(this)">Select Image</button>
+        </div>
+        <div class="item item-2" style="background-image: url('https://jjstorageaccount.blob.core.windows.net/sampleimages/1627_0.jpg');">
+            <button class="btn btn-light select-button" onclick="connecttocanva();setImageUrl(this)">Select Image</button>
+        </div>
+        <div class="item item-3" style="background-image: url('https://images.unsplash.com/photo-1503631285924-e1544dce8b28?auto=format&fit=crop&w=1234&q=80');">
+            <button class="btn btn-light select-button" onclick="connecttocanva();setImageUrl(this)">Select Image</button>
+        </div>
+        <div class="item item-4" style="background-image: url('https://images.unsplash.com/photo-1510425463958-dcced28da480?auto=format&fit=crop&w=1352&q=80');">
+            <button class="btn btn-light select-button" onclick="connecttocanva();setImageUrl(this)">Select Image</button>
+        </div>
+      </div>
+    </div>
+    <!-- Image Gallery End  -->
+
+  <!-- Image Generation Section Start-->
+  <div id="generation-section" class="container mx-auto px-4 py-8 d-none">
+      <div class="max-w-4xl mx-auto">
+          <div class="text-center mb-12">
+              <h1 class="text-4xl font-bold text-gray-800 mb-2">Generate Image</h1>
+              <!-- <p class="text-gray-600">Transform your ideas into stunning visuals</p> -->
+          </div>
+          
+          <div class="bg-white rounded-xl shadow-lg p-8">
+              <div class="mb-6">
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Choose Your Creation Method</label>
+                  <div class="grid grid-cols-2 gap-4">
+                      <button onclick="setMethod('prompt')" id="promptBtn" 
+                          class="py-3 px-6 rounded-lg bg-blue-500 text-white hover:bg-blue-600 transition-all">
+                          <i class="bi bi-magic mr-2"></i>Use AI Prompt
+                      </button>
+                      <button onclick="setMethod('upload')" id="uploadBtn" 
+                          class="py-3 px-6 rounded-lg bg-gray-200 hover:bg-gray-300 transition-all">
+                          <i class="bi bi-upload mr-2"></i>Upload Image
+                      </button>
+                  </div>
+              </div>
+
+              <div id="promptInput" class="space-y-4">
+                  <div>
+                      <label class="block text-sm font-medium text-gray-700 mb-2">Describe your vision</label>
+                      <textarea id="prompt" rows="4" 
+                          class="w-full p-3 border rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                          placeholder="Describe the image you want to generate in detail..."></textarea>
+                  </div>
+                  <div class="mt-6">
+                    <button onclick="generateImage()" 
+                        class="w-full bg-blue-500 text-white py-4 px-6 rounded-lg hover:bg-blue-600 transition-all">
+                        <i class="bi bi-stars mr-2"></i>Generate Image
+                    </button>
+                </div>
+              </div>
+
+              <div id="uploadInput" class="space-y-4 hidden">
+                <!-- <div id="section-uploadfield">
+                    <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                        <input type="file" id="imageUpload" accept="image/*" class="hidden" onchange="handleImageUpload(event)">
+                        <label for="imageUpload" class="cursor-pointer">
+                            <i class="bi bi-cloud-upload text-4xl text-gray-400"></i>
+                            <p class="mt-2 text-sm text-gray-600">Click to upload or drag and drop</p>
+                        </label>
+                    </div>
+                    <img id="imagePreview" class="mt-4 max-w-full h-auto mx-auto rounded-lg hidden" alt="Image Preview">
+                </div> -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Title </label>
+                    <input type="text" id="additionalInstructions" 
+                    class="w-full p-3 border rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                    placeholder="Enter the title...">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Details (Optional)</label>
+                    <input type="text" id="modifications" 
+                            class="w-full p-3 border rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                            placeholder="Enter the details...">
+                </div>
+                <div class="d-flex">
+                    <div class="col-8 d-flex gap-4" style="overflow-x: auto;" id="selected-template-container">
+                        <!-- Selected Templates Preview to be shown here -->
+                        <!-- <img src="https://plus.unsplash.com/premium_photo-1733514692259-57cdff0a750f?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" class="selected-template-preview" /> -->
+                    </div>
+                    <div class="col-4 d-flex align-items-center justify-content-end">
+                        <button class="btn btn-light border" onclick="navigatetoTemplates()"><i class="fa fa-file-text-o"></i> Select Template</button>
+                    </div>
+                </div>
+                <div class="mt-6">
+                    <button onclick="autofillTemplate()" 
+                            class="w-full bg-blue-500 text-white py-4 px-6 rounded-lg hover:bg-blue-600 transition-all">
+                        <i class="bi bi-stars mr-2"></i>
+                            <div class="spinner-border spinner-border-sm d-none" role="status" id="generate-from-image-loader">
+                                <span class="visually-hidden">Loading...</span> 
+                            </div>
+                        Generate Canva Design
+                    </button>
+                </div>
+            </div>
+          </div>
+
+          <div id="preview" class="hidden mt-8 bg-white rounded-xl shadow-lg p-6">
+              <img id="previewImage" class="max-w-full h-auto mx-auto rounded-lg mb-4">
+              <div class="text-center">
+                  <button onclick="proceedToEditor()" 
+                      class="bg-green-500 text-white py-3 px-8 rounded-lg hover:bg-green-600 transition-all">
+                      <i class="bi bi-pencil-square mr-2"></i>Proceed to Editor
+                  </button>
+              </div>
+          </div>
+      </div>
+  </div>
+  <!-- Image Generation Section End-->
+
+    <br>
+    <!-- Templates Start -->
+    <div class="container d-none" id="templates-container">
+      <h3>Choose Templates</h3>
+        <div class="d-flex" id="templates-grid">
+          <!-- Grid of Templates -->
+        </div>
+        <div class="mt-6">
+            <button class="w-full bg-blue-500 text-white py-4 px-6 rounded-lg hover:bg-blue-600 transition-all" onclick="navigatetoGeneration()">
+                Use Templates
+            </button>
+        </div>
+    </div>
+    <!-- Templates End -->
+
+    <!-- Final Image Start  -->
+    <div class="container mt-8 d-none" id="final-image-container">
+        <h3>Final Image</h3>
+        <div class="row">
+            <div class="col-12 d-flex justify-content-center" id="finalImages">
+                <!-- <img class="img-fluid rounded-lg" src="" alt="Final Image"> -->
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-12">
+                <button class="btn btn-primary" onclick="saveFinalImage()">Save</button>
+            </div>
+        </div>
+    </div>
+    <!-- Final Image End  -->
+  </div>
+
+
+  <script src="./script.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>
