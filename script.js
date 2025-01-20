@@ -183,7 +183,7 @@ async function exchangeCode(code) {
             "grant_type": "authorization_code",
             "code_verifier": window.codeVerifier,
             "code": code,
-            "redirect_uri": "http://127.0.0.1:5500/"
+            "redirect_uri": "https://white-sand-0c8709f00.4.azurestaticapps.net/"
         }),
     };
 
